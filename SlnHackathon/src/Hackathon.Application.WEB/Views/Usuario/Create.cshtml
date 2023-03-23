@@ -1,0 +1,39 @@
+﻿@model Hackathon.Domain.DTOs.UsuarioDTO
+
+
+<section id="contact" class="contact">
+    <div class="container mt-5">
+        <form asp-action="Create" class="needs-validation" novalidate>
+            <div class="form-row">
+
+                <div class="col-md-4 mb-3">
+                    <label for="validationTooltip01">Nome</label>
+                    <input asp-for="nome" type="text" class="form-control" id="validationTooltip01" placeholder="Nome" value="" required>
+                    <div class="valid-tooltip">
+                        Tudo certo!
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+                    <label for="validationTooltipUsername">Usuário</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="validationTooltipUsernamePrepend">@@</span>
+                        </div>
+                        <input asp-for="email" type="text" class="form-control" id="validationTooltipUsername" placeholder="E-mail" aria-describedby="validationTooltipUsernamePrepend" required>
+                        <div class="invalid-tooltip">
+                            Por favor, escolha um usuário válido e único.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label for="exampleInputPassword1">Senha</label>
+                    <input asp-for="senha" type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha">
+                </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Registrar-se</button>
+        </form>
+    </div>
+</section>

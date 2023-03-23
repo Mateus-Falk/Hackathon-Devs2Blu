@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Hackathon.Domain.DTOs.RelatoDTO>
+
+<main id="main">
+    <section id="breadcrumbs" class="breadcrumbs">
+        <div class="breadcrumb-hero">
+            <div class="container">
+                <div class="breadcrumb-hero">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <ol>
+            </ol>
+        </div>
+    </section>
+    <section id="blog" class="blog">
+        <div class="container" data-aos="fade-up">
+            <div class="row">
+
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <h3 class="sidebar-title">Categorias</h3>
+                        <div class="sidebar-item categories">
+                            <ul>
+                                <li><a href="/relato/Index?categoria=1">Iluminação Pública</a></li>
+                                <li><a href="/relato/Index?categoria=2">Segurança Pública</a></li>
+                                <li><a href="/relato/Index?categoria=3">Transporte Público</a></li>
+                                <li><a href="/relato/Index?categoria=4">Vias Públicas</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+               <div class="col-lg-8 entries">
+                <article class="entry">
+                    <h2 class="entry-title section-title">
+                        <a class="text-justify">Relatos Enviados</a>
+                    </h2>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-center">Protocolo</th>
+                                    <th scope="col" class="text-center">Relato</th>
+                                    <th scope="col" class="text-center">Apoiadores</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 @foreach (var item in Model)
+                                {
+                                <tr>
+                                        <th scope="row" class="text-center"><a asp-action="Details" asp-route-id="@item.id">@item.id</a></th>
+                                        <td scope="row" class="text-center">@item.relatorio</td>
+                                        <td scope="row" class="text-center">@item.contadorLikes</td>
+                                </tr> 
+                                }
+                            </tbody>
+                        </table>
+                </article>
+               </div>
+
+
+            </div>
+
+        </div>
+    </section>
+
+</main>

@@ -1,0 +1,139 @@
+﻿@using Jmelosegui.Mvc.GoogleMap;
+@model Hackathon.Domain.DTOs.RelatoDTO;
+@using System.Globalization;
+
+<!-- ======= Breadcrumbs ======= -->
+<section id="breadcrumbs" class="breadcrumbs">
+    <div class="breadcrumb-hero">
+    </div>
+    <div class="container">
+        <ol>
+            <li>
+                <a href="/Home/Index">Home</a>
+            </li>
+            <li>
+                Relatos
+            </li>
+        </ol>
+    </div>
+</section>
+<!-- End Breadcrumbs -->
+
+<!-- End Breadcrumbs -->
+
+<section id="contact" class="contact">
+    <div class="container">
+        <div class="form-group">
+              @using (Html.BeginForm("Create",
+                      "Relato",
+                      FormMethod.Post,
+                      new { enctype = "multipart/form-data" }))
+                        {       
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label asp-for="categoria" class="control-label"></label>
+                                <select asp-for="categoriaId" class="form-control" asp-items="ViewBag.categoriaId"></select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label asp-for="relatorio" class="control-label"></label>
+                                <textarea asp-for="relatorio" class="form-control"></textarea>
+                                <span asp-validation-for="relatorio" class="text-danger"></span>
+                            </div>
+
+                    <div class="form-group mt-3 col-sm-3">
+                        <input type="hidden" name="imagem" asp-for="id" id="imagem" />
+                        @*<label asp-for="imagem" class="control-label"></label>*@
+                        Imagem
+                        <input asp-for="imagem" type="file" name="imagemRelato" id="imagemRelato" class="form-control"/>
+                    </div>
+
+                                                                       
+                            <div class="form-group mt-3 mb-3">
+                                <label asp-for="Address" class="control-label"></label>
+                                <input type="text" id="address" asp-for="Address" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                            @(
+                                Html.GoogleMap()
+                                .Name("map")
+                                .ApiKey("AIzaSyDJUmQK9lYOWdvAXok2uA_b3yVbef2Wifo")
+                                .Height(500)
+                                .Culture(CultureInfo.GetCultureInfo("pt-br"))
+                                .Libraries(new[] { "places" })
+                                .ClientEvents(events => events.OnMapLoaded("mapEvent"))
+                                .Center(c => c.UseCurrentPosition())
+                                )
+
+                            <input type="hidden" value="@DateTime.Now" asp-for="data" />
+                            <input type="hidden" value="1" asp-for="contadorLikes" />
+                            <input type="hidden" value="1" asp-for="usuarioId" />
+                            <input type="hidden" value="Novo" asp-for="status" />
+                        </div>
+                        <div class="form-group mt-3">
+                            <input type="submit" value="Enviar" class="btn bg-verde" />
+                            <a class="btn bg-verde" href="/Relato/Index">Voltar</a>
+                        </div>
+                      }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @(Html.GoogleMap().ScriptRegistrar())
+    <script type="text/javascript">
+        var map = null;
+        var markers = [];
+        function mapEvent(args) {
+            console.log('>> map event.');
+            map = args.map;
+            markers = args.markers;
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('address');
+            var searchBox = new google.maps.places.SearchBox(input);
+            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function () {
+                searchBox.setBounds(map.getBounds());
+            });
+            searchBox.addListener('places_changed', function () {
+                var places = searchBox.getPlaces();
+                if (places.length == 0) {
+                    return;
+                }
+                // Clear out the old markers.
+                if (markers.length > 0) {
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                }
+                markers = [];
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function (place) {
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+        }
+    </script>
+}
